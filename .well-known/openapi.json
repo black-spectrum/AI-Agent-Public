@@ -11,158 +11,17 @@
     }
   ],
   "paths": {
-    "/repos/{owner}/{repo}/contents/{path}": {
+    "/repos/{owner}/{repo}/branches": {
       "get": {
-        "operationId": "getFileContents",
-        "summary": "Get file contents or directory listing",
+        "operationId": "listBranches",
+        "summary": "List all branches in the repository",
         "parameters": [
-          {
-            "name": "owner",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string" }
-          },
-          {
-            "name": "repo",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string" }
-          },
-          {
-            "name": "path",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string" }
-          }
+          { "name": "owner", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "repo", "in": "path", "required": true, "schema": { "type": "string" } }
         ],
         "responses": {
           "200": {
-            "description": "File or directory metadata",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          }
-        }
-      },
-      "put": {
-        "operationId": "updateOrCreateFile",
-        "summary": "Create or update a file",
-        "parameters": [
-          {
-            "name": "owner",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string" }
-          },
-          {
-            "name": "repo",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string" }
-          },
-          {
-            "name": "path",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string" }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": [ "message", "content" ],
-                "properties": {
-                  "message": { "type": "string" },
-                  "content": {
-                    "type": "string",
-                    "description": "Base64-encoded content"
-                  },
-                  "sha": {
-                    "type": "string",
-                    "description": "SHA for update, omit for create"
-                  },
-                  "branch": { "type": "string" }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": { "description": "File created or updated" }
-        }
-      },
-      "delete": {
-        "operationId": "deleteFile",
-        "summary": "Delete a file",
-        "parameters": [
-          {
-            "name": "owner",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string" }
-          },
-          {
-            "name": "repo",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string" }
-          },
-          {
-            "name": "path",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string" }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": [ "message", "sha" ],
-                "properties": {
-                  "message": { "type": "string" },
-                  "sha": { "type": "string" },
-                  "branch": { "type": "string" }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": { "description": "File deleted" }
-        }
-      }
-    },
-    "/repos/{owner}/{repo}/commits": {
-      "get": {
-        "operationId": "getRecentCommits",
-        "summary": "List recent commits",
-        "parameters": [
-          {
-            "name": "owner",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string" }
-          },
-          {
-            "name": "repo",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string" }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "List of commits",
+            "description": "List of branches",
             "content": {
               "application/json": {
                 "schema": {
@@ -175,51 +34,49 @@
         }
       }
     },
-    "/repos/{owner}/{repo}/git/refs": {
-      "post": {
-        "operationId": "createBranch",
-        "summary": "Create a new branch",
+    "/repos/{owner}/{repo}/commits/{sha}": {
+      "get": {
+        "operationId": "getSingleCommit",
+        "summary": "Get a single commit by SHA",
         "parameters": [
-          {
-            "name": "owner",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string" }
-          },
-          {
-            "name": "repo",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string" }
-          }
+          { "name": "owner", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "repo", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "sha", "in": "path", "required": true, "schema": { "type": "string" } }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": [ "ref", "sha" ],
-                "properties": {
-                  "ref": {
-                    "type": "string",
-                    "example": "refs/heads/new-branch"
-                  },
-                  "sha": {
-                    "type": "string",
-                    "description": "SHA of base commit"
-                  }
-                }
+        "responses": {
+          "200": {
+            "description": "Commit detail",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object" }
               }
             }
           }
-        },
-        "responses": {
-          "201": { "description": "Branch created" }
         }
       }
     },
     "/repos/{owner}/{repo}/pulls": {
+      "get": {
+        "operationId": "listPullRequests",
+        "summary": "List all pull requests",
+        "parameters": [
+          { "name": "owner", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "repo", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of pull requests",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "type": "object" }
+                }
+              }
+            }
+          }
+        }
+      },
       "post": {
         "operationId": "createPullRequest",
         "summary": "Create a pull request",
@@ -256,6 +113,63 @@
         },
         "responses": {
           "201": { "description": "Pull request created" }
+        }
+      }
+    },
+    "/repos/{owner}/{repo}/pulls/{pull_number}/merge": {
+      "put": {
+        "operationId": "mergePullRequest",
+        "summary": "Merge a pull request",
+        "parameters": [
+          { "name": "owner", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "repo", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "pull_number", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pull request successfully merged",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/repos/{owner}/{repo}": {
+      "get": {
+        "operationId": "getRepoMetadata",
+        "summary": "Get repository metadata",
+        "parameters": [
+          { "name": "owner", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "repo", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Repository metadata",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rate_limit": {
+      "get": {
+        "operationId": "getRateLimitStatus",
+        "summary": "Get GitHub API rate limit status",
+        "responses": {
+          "200": {
+            "description": "Rate limit status",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object" }
+              }
+            }
+          }
         }
       }
     }
