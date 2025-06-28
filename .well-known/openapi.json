@@ -1,1 +1,259 @@
-test
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "GitHub API for AGI Microkernel",
+    "version": "1.0.0",
+    "description": "This API enables the AGI microkernel to interact with GitHub repositories, including reading, writing, and managing source code."
+  },
+  "servers": [
+    {
+      "url": "https://api.github.com"
+    }
+  ],
+  "paths": {
+    "/repos/{owner}/{repo}/contents/{path}": {
+      "get": {
+        "operationId": "getFileContents",
+        "summary": "Get file contents or directory listing",
+        "parameters": [
+          {
+            "name": "owner",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "repo",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "path",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "File or directory metadata"
+          }
+        }
+      },
+      "put": {
+        "operationId": "updateOrCreateFile",
+        "summary": "Create or update a file",
+        "parameters": [
+          {
+            "name": "owner",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "repo",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "path",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [ "message", "content" ],
+                "properties": {
+                  "message": { "type": "string" },
+                  "content": {
+                    "type": "string",
+                    "description": "Base64-encoded content"
+                  },
+                  "sha": {
+                    "type": "string",
+                    "description": "SHA for update, omit for create"
+                  },
+                  "branch": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "File created or updated" }
+        }
+      },
+      "delete": {
+        "operationId": "deleteFile",
+        "summary": "Delete a file",
+        "parameters": [
+          {
+            "name": "owner",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "repo",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "path",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [ "message", "sha" ],
+                "properties": {
+                  "message": { "type": "string" },
+                  "sha": { "type": "string" },
+                  "branch": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "File deleted" }
+        }
+      }
+    },
+    "/repos/{owner}/{repo}/commits": {
+      "get": {
+        "operationId": "getRecentCommits",
+        "summary": "List recent commits",
+        "parameters": [
+          {
+            "name": "owner",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "repo",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "List of commits" }
+        }
+      }
+    },
+    "/repos/{owner}/{repo}/git/refs": {
+      "post": {
+        "operationId": "createBranch",
+        "summary": "Create a new branch",
+        "parameters": [
+          {
+            "name": "owner",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "repo",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [ "ref", "sha" ],
+                "properties": {
+                  "ref": {
+                    "type": "string",
+                    "example": "refs/heads/new-branch"
+                  },
+                  "sha": {
+                    "type": "string",
+                    "description": "SHA of base commit"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Branch created" }
+        }
+      }
+    },
+    "/repos/{owner}/{repo}/pulls": {
+      "post": {
+        "operationId": "createPullRequest",
+        "summary": "Create a pull request",
+        "parameters": [
+          {
+            "name": "owner",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "repo",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [ "title", "head", "base" ],
+                "properties": {
+                  "title": { "type": "string" },
+                  "head": { "type": "string" },
+                  "base": { "type": "string" },
+                  "body": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Pull request created" }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ]
+}
