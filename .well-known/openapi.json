@@ -16,28 +16,18 @@
         "operationId": "getFileContents",
         "summary": "Get file contents or directory listing",
         "parameters": [
-          {
-            "name": "owner",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string" }
-          },
-          {
-            "name": "repo",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string" }
-          },
-          {
-            "name": "path",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string" }
-          }
+          { "name": "owner", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "repo", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "path", "in": "path", "required": true, "schema": { "type": "string" } }
         ],
         "responses": {
           "200": {
-            "description": "File or directory metadata"
+            "description": "File or directory metadata",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object" }
+              }
+            }
           }
         }
       },
@@ -45,24 +35,9 @@
         "operationId": "updateOrCreateFile",
         "summary": "Create or update a file",
         "parameters": [
-          {
-            "name": "owner",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string" }
-          },
-          {
-            "name": "repo",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string" }
-          },
-          {
-            "name": "path",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string" }
-          }
+          { "name": "owner", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "repo", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "path", "in": "path", "required": true, "schema": { "type": "string" } }
         ],
         "requestBody": {
           "required": true,
@@ -73,14 +48,8 @@
                 "required": [ "message", "content" ],
                 "properties": {
                   "message": { "type": "string" },
-                  "content": {
-                    "type": "string",
-                    "description": "Base64-encoded content"
-                  },
-                  "sha": {
-                    "type": "string",
-                    "description": "SHA for update, omit for create"
-                  },
+                  "content": { "type": "string" },
+                  "sha": { "type": "string" },
                   "branch": { "type": "string" }
                 }
               }
@@ -95,24 +64,9 @@
         "operationId": "deleteFile",
         "summary": "Delete a file",
         "parameters": [
-          {
-            "name": "owner",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string" }
-          },
-          {
-            "name": "repo",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string" }
-          },
-          {
-            "name": "path",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string" }
-          }
+          { "name": "owner", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "repo", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "path", "in": "path", "required": true, "schema": { "type": "string" } }
         ],
         "requestBody": {
           "required": true,
@@ -140,21 +94,18 @@
         "operationId": "getRecentCommits",
         "summary": "List recent commits",
         "parameters": [
-          {
-            "name": "owner",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string" }
-          },
-          {
-            "name": "repo",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string" }
-          }
+          { "name": "owner", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "repo", "in": "path", "required": true, "schema": { "type": "string" } }
         ],
         "responses": {
-          "200": { "description": "List of commits" }
+          "200": {
+            "description": "List of commits",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "type": "object" } }
+              }
+            }
+          }
         }
       }
     },
@@ -163,18 +114,8 @@
         "operationId": "createBranch",
         "summary": "Create a new branch",
         "parameters": [
-          {
-            "name": "owner",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string" }
-          },
-          {
-            "name": "repo",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string" }
-          }
+          { "name": "owner", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "repo", "in": "path", "required": true, "schema": { "type": "string" } }
         ],
         "requestBody": {
           "required": true,
@@ -184,14 +125,8 @@
                 "type": "object",
                 "required": [ "ref", "sha" ],
                 "properties": {
-                  "ref": {
-                    "type": "string",
-                    "example": "refs/heads/new-branch"
-                  },
-                  "sha": {
-                    "type": "string",
-                    "description": "SHA of base commit"
-                  }
+                  "ref": { "type": "string", "example": "refs/heads/new-branch" },
+                  "sha": { "type": "string" }
                 }
               }
             }
@@ -207,18 +142,8 @@
         "operationId": "createPullRequest",
         "summary": "Create a pull request",
         "parameters": [
-          {
-            "name": "owner",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string" }
-          },
-          {
-            "name": "repo",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string" }
-          }
+          { "name": "owner", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "repo", "in": "path", "required": true, "schema": { "type": "string" } }
         ],
         "requestBody": {
           "required": true,
